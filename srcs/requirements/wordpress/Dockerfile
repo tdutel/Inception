@@ -3,20 +3,14 @@ FROM debian:buster
 RUN apt update -y
 RUN apt upgrade -y
 
-RUN apt install nginx -y
+RUN apt install wget -y
 
-# RUN apt install vim -y
-# RUN apt install curl -y
+RUN apt install -y	php7.3\
+					php-fpm\
+					php-mysql\
+					mariadb-client
 
-RUN mkdir -p /etc/nginx/ssl
-RUN apt install openssl -y
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=login.42.fr/UID=login"
+RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
+RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
 
-RUN mkdir -p /var/run/nginx
-
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-
-RUN chmod 755 /var/www/html
-RUN chown -R www-data:www-data /var/www/html
-
-CMD [ "nginx", "-g", "daemon off;" ]
+RUN		chown -R root:root /var/www/wordpress
