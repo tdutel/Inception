@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  nginx:
+    build: requirements/nginx
+    env_file: .env
+    container_name: nginx
+    # context : requirements/nginx
+    # dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    restart: always
+    volumes:
+      - ./:/home/tdutel/data
+
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb
+      # context : requirements/mariadb
+      # dockerfile: Dockerfile
+    args:
+      - DB_NAME
+      - DB_USER
+      - DB_PASS
+      - DB_ROOT_PASS
+    env_file:
+      - .env
+    restart: always
+
