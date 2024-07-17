@@ -2,24 +2,16 @@ FROM debian:bullseye
 
 ARG	DB_NAME
 ARG DB_USER
-ARG	DB_PASSWORD
-ARG DB_ROOT_PASSWORD
+ARG	DB_PASS
+ARG DB_ROOT_PASS
 
-RUN apt update -y
-RUN apt upgrade -y
+RUN apt update -y && apt upgrade -y && apt-get install mariadb-server -y
 
-RUN apt-get install mariadb-server -y
-# COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
-# RUN apt install vim -y
-# RUN apt install curl -y
+COPY tools/init-db.sh /init-db.sh
+RUN chmod +x /init-db.sh
 
-RUN service mariadb start
-RUN mysql -e "CREATE DATABASE IF NOT EXISTS \'${DB_NAME}\';"
-RUN mysql -e "CREATE USER IF NOT EXISTS \`${DB_USER}\`@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
-RUN mysql -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASSWORD}';"
-RUN mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';"
-RUN mysql -e "FLUSH PRIVILEGES;"
-RUN mysqladmin -u root -p$DB_ROOT_PASSWORD shutdown
-RUN exec mysqld_safe
+Run /init-db.sh
 
 EXPOSE 3306
+
+CMD ["mysqld_safe"]
