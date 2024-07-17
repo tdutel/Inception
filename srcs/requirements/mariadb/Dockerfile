@@ -10,7 +10,7 @@ RUN apt update -y && apt upgrade -y && apt-get install mariadb-server -y
 COPY tools/init-db.sh /init-db.sh
 RUN chmod +x /init-db.sh
 
-Run /init-db.sh
+RUN /init-db.sh
 
 EXPOSE 3306
 
