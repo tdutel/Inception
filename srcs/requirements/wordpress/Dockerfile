@@ -7,6 +7,8 @@ RUN apt install -y	php7.4\
 					php-mysql\
 					mariadb-client
 
+RUN mkdir -p /run/php && chown www-data:www-data /run/php  # Créer le répertoire et fixer les permissions
+
 RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
 RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
 
