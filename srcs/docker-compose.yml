@@ -12,6 +12,7 @@ services:
     restart: always
     depends_on:
       - mariadb
+      - wordpress
     networks:
       - inception
     volumes:
@@ -29,17 +30,30 @@ services:
         DB_ROOT_PASS: ${DB_ROOT_PASS}
     env_file:
       - .env
-    volumes:
-      - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
     restart: always
     networks:
       - inception
+    volumes:
+      - db_data:/var/lib/mysql
 
-volumes:
-  db_data:
+  wordpress:
+    container_name: wordpress
+    build:
+      context: requirements/wordpress
+      dockerfile: Dockerfile
+    env_file: .env
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+    volumes:
+      - ./:/home/tdutel/data
 
 networks:
   inception:
     driver: bridge
+
+volumes:
+  db_data:
