@@ -9,14 +9,15 @@ services:
     env_file: .env
     ports:
       - "443:443"
-    restart: always
+    restart: on-failure
     depends_on:
-      - mariadb
+      # - mariadb
       - wordpress
     networks:
       - inception
     volumes:
-      - ./:/home/tdutel/data
+      - wordpress:/var/www/html
+      # -  wordpress:/var/www/wordpress
 
   mariadb:
     container_name: mariadb
@@ -31,12 +32,12 @@ services:
     env_file:
       - .env
     ports:
-      - "3306:3306"
-    restart: always
+      - "3306"
+    restart: unless-stopped
     networks:
       - inception
     volumes:
-      - db_data:/var/lib/mysql
+      - mariadb:/var/lib/mysql
 
   wordpress:
     container_name: wordpress
@@ -49,11 +50,25 @@ services:
     networks:
       - inception
     volumes:
-      - ./:/home/tdutel/data
+      - wordpress:/var/www/wordpress
+      # - ./:/home/tdutel/data
+    expose:
+      - "9000"
 
 networks:
   inception:
     driver: bridge
 
 volumes:
-  db_data:
+  wordpress:
+    driver: local # ici nous stockons le volume en local
+    driver_opts:
+    type: 'none' 									# aucun type spécifique
+    o: 'bind'
+    device: '/home/tdutel/data/wordpress' 		#Ou stocker le dossier sur votre ordinateur en local
+  mariadb:
+    driver: local
+    driver_opts:
+    type: 'none' 
+    o: 'bind'										 # Les Bind Mounts sont des volumes qui se montent sur un chemin d'accès à l'hôte, et ils peuvent être modifiés par d'autres processus en dehors de docker.
+    device: '/home/tdutel/data/mariadb'
