@@ -3,17 +3,20 @@
 cd /var/www/html
 if [ ! -f "./wp-config.php" ];
 then
-	sleep 10
+	echo "Wordpress not installed cleaning up"
+	rm -rf /var/www/html/*
+
+	echo "Installing Wordpress"
 	wp core download --allow-root
 
-	wp config create	--allow-root \
+	echo "Configuring Wordpress"
+	wp config create --allow-root \
 				--dbname=$DB_NAME \
 				--dbuser=$DB_USER \
 				--dbpass=$DB_PASS \
 				--dbhost=mariadb:3306
 
-	wp db create --allow-root
-	
+	echo "Installing Wordpress"
 	wp core install --allow-root \
 					--url="tdutel.42.fr" \
 					--title="Inception Project" \
@@ -21,9 +24,9 @@ then
 					--admin_password="$WP_ADMIN_PASS" \
 					--admin_email="$WP_ADMIN_MAIL"
 
-	wp user create "$WP_BASE_USER" "$WP_BASE_EMAIL" --allow-root \
+	echo "Creating Base User"
+	wp user create "$WP_BASE_USER" "$WP_BASE_EMAIL" --user_pass="$WP_BASE_PASS" --allow-root \
 
 fi
-
-mkdir -p /run/php/
-php-fpm7.4 -F
+echo "Starting Wordpress"
+exec "$@"
