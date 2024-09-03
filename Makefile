@@ -4,25 +4,25 @@ all:
 	@mkdir -p /home/tdutel/data/mariadb
 	@sed -i "/127.0.0.1 tdutel.42.fr/d" /etc/hosts
 	@echo "127.0.0.1 tdutel.42.fr" >> /etc/hosts
-	@docker-compose -f ./srcs/docker-compose.yml up -d
+	@docker compose -f ./srcs/docker-compose.yml up -d
 
 stop:
-	@docker-compose -f ./srcs/docker-compose.yml stop
+	@docker compose -f ./srcs/docker-compose.yml stop
 
 kill:
-	@docker-compose -f ./srcs/docker-compose.yml kill
+	@docker compose -f ./srcs/docker-compose.yml kill
 
 re:
-	@docker-compose -f ./srcs/docker-compose.yml up -d --build
+	@docker compose -f ./srcs/docker-compose.yml up -d --build
 
 mysql:
-	@docker-compose -f ./srcs/docker-compose.yml exec mariadb mariadb -u tdutel -p
+	@docker compose -f ./srcs/docker-compose.yml exec mariadb mariadb -u tdutel -p
 
 wordpress:
-	@docker-compose -f ./srcs/docker-compose.yml exec wordpress bash
+	@docker compose -f ./srcs/docker-compose.yml exec wordpress bash
 
 nginx:
-	@docker-compose -f ./srcs/docker-compose.yml exec nginx bash
+	@docker compose -f ./srcs/docker-compose.yml exec nginx bash
 
 clean:
 	@docker stop $$(docker ps -qa); \
