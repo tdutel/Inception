@@ -28,7 +28,6 @@ clean:
 	docker volume rm $$(docker volume ls -q); \
 	docker network rm $$(docker network ls -q); \
 	rm -rf /home/tdutel/data/wordpress; \
-	rm -rf /home/tdutel/data/minecraft; \
 	rm -rf /home/tdutel/data/mariadb
 
 .PHONY: all re down clean mysql nginx wordpress
