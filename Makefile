@@ -21,6 +21,9 @@ mysql:
 wordpress:
 	@docker-compose -f ./srcs/docker-compose.yml exec wordpress bash
 
+nginx:
+	@docker-compose -f ./srcs/docker-compose.yml exec nginx bash
+
 clean:
 	@docker stop $$(docker ps -qa); \
 	docker rm $$(docker ps -qa); \
